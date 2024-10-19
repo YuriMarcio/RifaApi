@@ -10,16 +10,15 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Database\QueryException;
-use Illuminate\Validation\ValidationException;
+
 
 class AuthController extends Controller
+
 {
     /**
      * @OA\Post(
      *     path="/api/auth/login",
-     *     summary="Autenticação de usuários",
+     *     summary="Autentica um usuário",
      *     tags={"Auth"},
      *     @OA\RequestBody(
      *         required=true,
@@ -40,11 +39,11 @@ class AuthController extends Controller
      *     ),
      *     @OA\Response(
      *         response=401,
-     *         description="Não autorizado",
+     *         description="Não autorizado, credenciais inválidas"
      *     ),
      *     @OA\Response(
      *         response=500,
-     *         description="Erro interno do servidor",
+     *         description="Erro interno do servidor"
      *     )
      * )
      */
@@ -76,10 +75,11 @@ class AuthController extends Controller
         }
     }
 
+
     /**
      * @OA\Post(
      *     path="/api/auth/employer-login",
-     *     summary="Login de empregador",
+     *     summary="Autentica um empregador",
      *     tags={"Auth"},
      *     @OA\RequestBody(
      *         required=true,
@@ -99,7 +99,7 @@ class AuthController extends Controller
      *     ),
      *     @OA\Response(
      *         response=401,
-     *         description="Não autorizado",
+     *         description="Não autorizado, credenciais inválidas"
      *     )
      * )
      */
@@ -127,7 +127,7 @@ class AuthController extends Controller
     /**
      * @OA\Post(
      *     path="/api/auth/register",
-     *     summary="Registro de usuário",
+     *     summary="Registra um novo usuário",
      *     tags={"Auth"},
      *     @OA\RequestBody(
      *         required=true,
@@ -144,14 +144,14 @@ class AuthController extends Controller
      *     ),
      *     @OA\Response(
      *         response=201,
-     *         description="Usuário criado com sucesso",
+     *         description="Usuário registrado com sucesso",
      *         @OA\JsonContent(
      *             @OA\Property(property="message", type="string", example="User created successfully")
      *         )
      *     ),
      *     @OA\Response(
      *         response=500,
-     *         description="Erro interno ao criar usuário",
+     *         description="Erro interno ao criar usuário"
      *     )
      * )
      */
@@ -163,7 +163,7 @@ class AuthController extends Controller
             'password' => 'required|string|min:4',
             'documentNumber' => 'required|string|min:4',
             'phone_number' => 'required|string|min:4',
-            'idade' => 'required|string',
+            'idade' => 'required|integer',
             'photo' => 'nullable|string|min:4',
         ]);
 
@@ -183,7 +183,7 @@ class AuthController extends Controller
     /**
      * @OA\Post(
      *     path="/api/auth/register-employer",
-     *     summary="Registro de empregador",
+     *     summary="Registra um novo empregador",
      *     tags={"Auth"},
      *     @OA\RequestBody(
      *         required=true,
@@ -199,14 +199,14 @@ class AuthController extends Controller
      *     ),
      *     @OA\Response(
      *         response=201,
-     *         description="Empregador criado com sucesso",
+     *         description="Empregador registrado com sucesso",
      *         @OA\JsonContent(
      *             @OA\Property(property="message", type="string", example="Employee created successfully")
      *         )
      *     ),
      *     @OA\Response(
      *         response=500,
-     *         description="Erro interno ao criar empregador",
+     *         description="Erro interno ao criar empregador"
      *     )
      * )
      */
@@ -215,30 +215,18 @@ class AuthController extends Controller
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|unique:employees,email',
-            'password' => 'required|string|min:6',
-            'documentNumber' => 'required|string|min:11|max:14',
-            'phone_number' => 'required|string|min:10|max:15',
+            'password' => 'required|string|min:4',
+            'documentNumber' => 'required|string|min:4',
+            'phone_number' => 'required|string|min:4',
             'photo' => 'nullable|string|min:4',
         ]);
 
-        DB::beginTransaction();
-
         try {
-            $employee = new Employee();
-            $employee->name = $validatedData['name'];
-            $employee->email = $validatedData['email'];
-            $employee->password = Hash::make($validatedData['password']);
-            $employee->documentNumber = $validatedData['documentNumber'];
-            $employee->phone_number = $validatedData['phone_number'];
-            $employee->photo = $validatedData['photo'] ?? null;
-            $employee->save();
-
-            DB::commit();
+            $validatedData['password'] = Hash::make($validatedData['password']);
+            Employee::create($validatedData);
 
             return response()->json(['message' => 'Employee created successfully'], Response::HTTP_CREATED);
-        } catch (QueryException $e) {
-            DB::rollBack();
-
+        } catch (\Exception $e) {
             return response()->json(['message' => 'Failed to create employee', 'error' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

@@ -1,17 +1,21 @@
 {
     "openapi": "3.0.0",
     "info": {
-        "title": "APIs For Thrift Store",
+        "title": "API de Rifa",
+        "description": "Documentação da API para o sistema de rifa",
+        "contact": {
+            "name": "Seu Nome",
+            "email": "seuemail@example.com"
+        },
         "version": "1.0.0"
     },
     "paths": {
-        "/home": {},
         "/api/auth/login": {
             "post": {
                 "tags": [
                     "Auth"
                 ],
-                "summary": "Autenticação de usuários",
+                "summary": "Autentica um usuário",
                 "operationId": "e45287a3dc02f4633476dbf218bb9ef7",
                 "requestBody": {
                     "required": true,
@@ -62,6 +66,39 @@
                         }
                     },
                     "401": {
+                        "description": "Não autorizado, credenciais inválidas"
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor"
+                    }
+                }
+            }
+        },
+        "/api/auth/teste": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Endpoint de teste",
+                "operationId": "b4d018e3df60a7b6741300ad12d73c32",
+                "responses": {
+                    "200": {
+                        "description": "Teste realizado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Deu certo"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
                         "description": "Não autorizado"
                     },
                     "500": {
@@ -75,7 +112,7 @@
                 "tags": [
                     "Auth"
                 ],
-                "summary": "Login de empregador",
+                "summary": "Autentica um empregador",
                 "operationId": "e8d24787d0c64a421489b926e708ab62",
                 "requestBody": {
                     "required": true,
@@ -123,7 +160,7 @@
                         }
                     },
                     "401": {
-                        "description": "Não autorizado"
+                        "description": "Não autorizado, credenciais inválidas"
                     }
                 }
             }
@@ -133,7 +170,7 @@
                 "tags": [
                     "Auth"
                 ],
-                "summary": "Registro de usuário",
+                "summary": "Registra um novo usuário",
                 "operationId": "c0eaa9600f14ac767e20818010954c59",
                 "requestBody": {
                     "required": true,
@@ -186,7 +223,7 @@
                 },
                 "responses": {
                     "201": {
-                        "description": "Usuário criado com sucesso",
+                        "description": "Usuário registrado com sucesso",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -212,7 +249,7 @@
                 "tags": [
                     "Auth"
                 ],
-                "summary": "Registro de empregador",
+                "summary": "Registra um novo empregador",
                 "operationId": "39465b069ac4292f5d58a0f0eccb3d3e",
                 "requestBody": {
                     "required": true,
@@ -260,7 +297,7 @@
                 },
                 "responses": {
                     "201": {
-                        "description": "Empregador criado com sucesso",
+                        "description": "Empregador registrado com sucesso",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -280,70 +317,12 @@
                     }
                 }
             }
-        },
-        "/api/home": {
-            "get": {
-                "tags": [
-                    "Home"
-                ],
-                "summary": "Retorna dados da página inicial",
-                "operationId": "f1c832ddefce9887a1909b43fa5dfe5f",
-                "responses": {
-                    "200": {
-                        "description": "Dados retornados com sucesso",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "success": {
-                                            "type": "boolean",
-                                            "example": true
-                                        },
-                                        "data": {
-                                            "type": "object",
-                                            "example": {
-                                                "message": "Bem-vindo à Thrift Store!"
-                                            }
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Não autorizado"
-                    },
-                    "500": {
-                        "description": "Erro interno do servidor"
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        }
-    },
-    "components": {
-        "securitySchemes": {
-            "bearerAuth": {
-                "type": "http",
-                "description": "Insira o token JWT no formato 'Bearer {token}'",
-                "bearerFormat": "JWT",
-                "scheme": "bearer"
-            }
         }
     },
     "tags": [
         {
             "name": "Auth",
             "description": "Auth"
-        },
-        {
-            "name": "Home",
-            "description": "Home"
         }
     ]
 }
