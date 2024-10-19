@@ -16,6 +16,38 @@ use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
+    /**
+     * @OA\Post(
+     *     path="/api/auth/login",
+     *     summary="Autenticação de usuários",
+     *     tags={"Auth"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"email", "password"},
+     *             @OA\Property(property="email", type="string", format="email", example="user@example.com"),
+     *             @OA\Property(property="password", type="string", example="password123")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Usuário autenticado com sucesso",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Authorized"),
+     *             @OA\Property(property="token", type="string"),
+     *             @OA\Property(property="user", type="object")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Não autorizado",
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Erro interno do servidor",
+     *     )
+     * )
+     */
     public function loginUser(Request $request)
     {
         try {
@@ -44,6 +76,33 @@ class AuthController extends Controller
         }
     }
 
+    /**
+     * @OA\Post(
+     *     path="/api/auth/employer-login",
+     *     summary="Login de empregador",
+     *     tags={"Auth"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"email", "password"},
+     *             @OA\Property(property="email", type="string", format="email", example="employer@example.com"),
+     *             @OA\Property(property="password", type="string", example="password123")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Empregador autenticado com sucesso",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Authorized"),
+     *             @OA\Property(property="token", type="string")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Não autorizado",
+     *     )
+     * )
+     */
     public function loginEmployer(Request $request)
     {
         try {
@@ -65,6 +124,37 @@ class AuthController extends Controller
         }
     }
 
+    /**
+     * @OA\Post(
+     *     path="/api/auth/register",
+     *     summary="Registro de usuário",
+     *     tags={"Auth"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"name", "email", "password", "documentNumber", "phone_number", "idade"},
+     *             @OA\Property(property="name", type="string", example="John Doe"),
+     *             @OA\Property(property="email", type="string", format="email", example="user@example.com"),
+     *             @OA\Property(property="password", type="string", example="password123"),
+     *             @OA\Property(property="documentNumber", type="string", example="12345678901"),
+     *             @OA\Property(property="phone_number", type="string", example="11987654321"),
+     *             @OA\Property(property="idade", type="integer", example=30),
+     *             @OA\Property(property="photo", type="string", nullable=true)
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Usuário criado com sucesso",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="User created successfully")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Erro interno ao criar usuário",
+     *     )
+     * )
+     */
     public function createUser(Request $request)
     {
         $request->validate([
@@ -90,20 +180,46 @@ class AuthController extends Controller
         }
     }
 
+    /**
+     * @OA\Post(
+     *     path="/api/auth/register-employer",
+     *     summary="Registro de empregador",
+     *     tags={"Auth"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"name", "email", "password", "documentNumber", "phone_number"},
+     *             @OA\Property(property="name", type="string", example="Jane Doe"),
+     *             @OA\Property(property="email", type="string", format="email", example="employer@example.com"),
+     *             @OA\Property(property="password", type="string", example="password123"),
+     *             @OA\Property(property="documentNumber", type="string", example="12345678901"),
+     *             @OA\Property(property="phone_number", type="string", example="11987654321"),
+     *             @OA\Property(property="photo", type="string", nullable=true)
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Empregador criado com sucesso",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Employee created successfully")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Erro interno ao criar empregador",
+     *     )
+     * )
+     */
     public function createEmployer(Request $request)
     {
-        try {
-            $validatedData = $request->validate([
-                'name' => 'required|string|max:255',
-                'email' => 'required|string|email|unique:employees,email',
-                'password' => 'required|string|min:6',
-                'documentNumber' => 'required|string|min:11|max:14',
-                'phone_number' => 'required|string|min:10|max:15',
-                'photo' => 'nullable|string|min:4',
-            ]);
-        } catch (ValidationException $e) {
-            return response()->json(['message' => 'Validation failed', 'errors' => $e->errors()], Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|unique:employees,email',
+            'password' => 'required|string|min:6',
+            'documentNumber' => 'required|string|min:11|max:14',
+            'phone_number' => 'required|string|min:10|max:15',
+            'photo' => 'nullable|string|min:4',
+        ]);
 
         DB::beginTransaction();
 
@@ -115,7 +231,6 @@ class AuthController extends Controller
             $employee->documentNumber = $validatedData['documentNumber'];
             $employee->phone_number = $validatedData['phone_number'];
             $employee->photo = $validatedData['photo'] ?? null;
-            $employee->access_level = 1;
             $employee->save();
 
             DB::commit();
@@ -123,77 +238,8 @@ class AuthController extends Controller
             return response()->json(['message' => 'Employee created successfully'], Response::HTTP_CREATED);
         } catch (QueryException $e) {
             DB::rollBack();
-            return response()->json(['message' => 'Database error', 'error' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return response()->json(['message' => 'An unexpected error occurred', 'error' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
+
+            return response()->json(['message' => 'Failed to create employee', 'error' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
-    }
-
-    public function teste()
-    {
-        return response()->json(['message' => 'Test successful'], Response::HTTP_OK);
-    }
-
-    public function showPerId(string $id)
-    {
-        try {
-            $user = User::findOrFail($id);
-            return response()->json(['User' => $user], Response::HTTP_OK);
-        } catch (\Exception $e) {
-            try {
-                $employee = Employee::findOrFail($id);
-                return response()->json(['User' => $employee], Response::HTTP_OK);
-            } catch (\Exception $e) {
-                return response()->json(['message' => 'User not found', 'error' => $e->getMessage()], Response::HTTP_NOT_FOUND);
-            }
-        }
-    }
-
-    public function edit(string $id)
-    {
-        try {
-            $user = User::findOrFail($id);
-            return response()->json(['User' => $user], Response::HTTP_OK);
-        } catch (\Exception $e) {
-            return response()->json(['message' => 'User not found', 'error' => $e->getMessage()], Response::HTTP_NOT_FOUND);
-        }
-    }
-
-    public function update(Request $request, string $id)
-    {
-        try {
-            $request->validate([
-                'name' => 'required|string',
-                'email' => 'required|email|unique:users,email,' . $id,
-                'phone_number' => 'required|string',
-                'documentNumber' => 'required|string',
-                'idade' => 'required|integer',
-                'photo' => 'nullable|string',
-            ]);
-
-            $user = User::findOrFail($id);
-            $user->fill($request->only([
-                'name',
-                'email',
-                'phone_number',
-                'documentNumber',
-                'idade',
-                'photo',
-            ]));
-
-            $user->save();
-
-            return response()->json(['message' => 'User updated successfully'], Response::HTTP_OK);
-        } catch (\Exception $e) {
-            return response()->json(['message' => 'Failed to update user', 'error' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    public function logout(Request $request)
-    {
-        $request->user()->tokens()->delete();
-
-        return response()->json(['message' => 'Logged out successfully'], Response::HTTP_OK);
     }
 }
