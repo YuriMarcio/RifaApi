@@ -16,7 +16,7 @@
                     "Auth"
                 ],
                 "summary": "Autentica um usuário",
-                "operationId": "e45287a3dc02f4633476dbf218bb9ef7",
+                "operationId": "7a2b2d1a59c8953f7b2c8784fd1ddbc4",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -74,46 +74,13 @@
                 }
             }
         },
-        "/api/auth/teste": {
-            "post": {
-                "tags": [
-                    "Auth"
-                ],
-                "summary": "Endpoint de teste",
-                "operationId": "b4d018e3df60a7b6741300ad12d73c32",
-                "responses": {
-                    "200": {
-                        "description": "Teste realizado com sucesso",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Deu certo"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Não autorizado"
-                    },
-                    "500": {
-                        "description": "Erro interno do servidor"
-                    }
-                }
-            }
-        },
         "/api/auth/employer-login": {
             "post": {
                 "tags": [
                     "Auth"
                 ],
                 "summary": "Autentica um empregador",
-                "operationId": "e8d24787d0c64a421489b926e708ab62",
+                "operationId": "c78a25db6d8f326b568866b8a62050b5",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -171,7 +138,7 @@
                     "Auth"
                 ],
                 "summary": "Registra um novo usuário",
-                "operationId": "c0eaa9600f14ac767e20818010954c59",
+                "operationId": "a11d86162c820538fe7bd99d34c6e175",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -250,7 +217,7 @@
                     "Auth"
                 ],
                 "summary": "Registra um novo empregador",
-                "operationId": "39465b069ac4292f5d58a0f0eccb3d3e",
+                "operationId": "abe2cdff51b180f71319ceac4fcf3390",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -317,12 +284,394 @@
                     }
                 }
             }
+        },
+        "/api/raffle": {
+            "get": {
+                "tags": [
+                    "Raffle"
+                ],
+                "summary": "Obtém todas as rifas",
+                "operationId": "30888ce67e7e7ddcd1dcf98bbcc52d7c",
+                "responses": {
+                    "200": {
+                        "description": "Lista de rifas obtida com sucesso"
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor"
+                    }
+                }
+            }
+        },
+        "/api/raffle/create": {
+            "post": {
+                "tags": [
+                    "Raffle"
+                ],
+                "summary": "Cria uma rifa",
+                "operationId": "b731a046813cac4dfc468fbbd4c71df4",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "title",
+                                    "raffleType",
+                                    "startDate",
+                                    "endDate",
+                                    "ticketPrice",
+                                    "maxTicketsPerUser",
+                                    "maxParticipants",
+                                    "paymentMethod",
+                                    "awards"
+                                ],
+                                "properties": {
+                                    "title": {
+                                        "type": "string",
+                                        "example": "Rifa de Natal"
+                                    },
+                                    "raffleType": {
+                                        "type": "string",
+                                        "example": "sorteio"
+                                    },
+                                    "startDate": {
+                                        "type": "string",
+                                        "format": "date-time",
+                                        "example": "2024-12-01T00:00:00Z"
+                                    },
+                                    "endDate": {
+                                        "type": "string",
+                                        "format": "date-time",
+                                        "example": "2024-12-31T23:59:59Z"
+                                    },
+                                    "ticketPrice": {
+                                        "type": "number",
+                                        "example": 10
+                                    },
+                                    "maxTicketsPerUser": {
+                                        "type": "integer",
+                                        "example": 5
+                                    },
+                                    "maxParticipants": {
+                                        "type": "integer",
+                                        "example": 100
+                                    },
+                                    "paymentMethod": {
+                                        "type": "string",
+                                        "example": "Cartão de Crédito"
+                                    },
+                                    "awards": {
+                                        "type": "array",
+                                        "items": {
+                                            "properties": {
+                                                "Id": {
+                                                    "type": "string",
+                                                    "example": "award1"
+                                                },
+                                                "Title": {
+                                                    "type": "string",
+                                                    "example": "Prêmio 1"
+                                                },
+                                                "Description": {
+                                                    "type": "string",
+                                                    "example": "Descrição do prêmio"
+                                                },
+                                                "tagType": {
+                                                    "type": "string",
+                                                    "example": "Product"
+                                                },
+                                                "images": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "file"
+                                                    }
+                                                },
+                                                "Value": {
+                                                    "type": "number",
+                                                    "example": 100
+                                                },
+                                                "image": {
+                                                    "type": "file"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Rifa criada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Rifa criada com sucesso"
+                                        },
+                                        "raffle": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Erro de validação",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Erro de validação"
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro interno do servidor"
+                    }
+                }
+            }
+        },
+        "/api/raffle/{id}": {
+            "get": {
+                "tags": [
+                    "Raffle"
+                ],
+                "summary": "Exibe uma rifa específica",
+                "description": "Retorna os detalhes de uma rifa com base no ID fornecido.",
+                "operationId": "getRaffleById",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID da rifa a ser exibida",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Detalhes da rifa encontrados"
+                    },
+                    "404": {
+                        "description": "Rifa não encontrada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Rifa não encontrada."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Raffle"
+                ],
+                "summary": "Atualiza uma rifa específica",
+                "description": "Atualiza os dados de uma rifa com base no ID fornecido.",
+                "operationId": "updateRaffle",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID da rifa a ser atualizada",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "title",
+                                    "raffleType",
+                                    "startDate",
+                                    "endDate",
+                                    "ticketPrice",
+                                    "maxTicketsPerUser",
+                                    "maxParticipants",
+                                    "paymentMethod"
+                                ],
+                                "properties": {
+                                    "title": {
+                                        "type": "string",
+                                        "example": "Rifa de Natal"
+                                    },
+                                    "raffleType": {
+                                        "type": "string",
+                                        "example": "sorteio"
+                                    },
+                                    "startDate": {
+                                        "type": "string",
+                                        "format": "date-time",
+                                        "example": "2024-12-01T00:00:00Z"
+                                    },
+                                    "endDate": {
+                                        "type": "string",
+                                        "format": "date-time",
+                                        "example": "2024-12-31T23:59:59Z"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Descrição da rifa"
+                                    },
+                                    "terms": {
+                                        "type": "string",
+                                        "example": "Termos e condições"
+                                    },
+                                    "ticketPrice": {
+                                        "type": "number",
+                                        "example": 10
+                                    },
+                                    "maxTicketsPerUser": {
+                                        "type": "integer",
+                                        "example": 5
+                                    },
+                                    "maxParticipants": {
+                                        "type": "integer",
+                                        "example": 100
+                                    },
+                                    "paymentMethod": {
+                                        "type": "string",
+                                        "example": "Cartão de Crédito"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Rifa atualizada com sucesso."
+                    },
+                    "404": {
+                        "description": "Rifa não encontrada.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Rifa não encontrada."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Erro de validação dos dados.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Os dados fornecidos são inválidos."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Raffle"
+                ],
+                "summary": "Remove uma rifa específica",
+                "description": "Deleta uma rifa com base no ID fornecido.",
+                "operationId": "destroyRaffle",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID da rifa a ser excluída",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Rifa excluída com sucesso.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Rifa excluída com sucesso."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Rifa não encontrada.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Rifa não encontrada."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "tags": [
         {
             "name": "Auth",
             "description": "Auth"
+        },
+        {
+            "name": "Raffle",
+            "description": "Raffle"
         }
     ]
 }
