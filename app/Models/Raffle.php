@@ -24,6 +24,12 @@ class Raffle extends Model
         'isEnable'
     ];
 
+
+    public function tickets()
+    {
+        return $this->hasMany(Ticket::class);
+    }
+
     /**
      * A Raffle pode ter muitos Prêmios.
      */

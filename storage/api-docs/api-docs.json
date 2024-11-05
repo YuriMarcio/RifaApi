@@ -74,13 +74,13 @@
                 }
             }
         },
-        "/api/auth/employer-login": {
+        "/api/auth/loginemployer": {
             "post": {
                 "tags": [
                     "Auth"
                 ],
                 "summary": "Autentica um empregador",
-                "operationId": "c78a25db6d8f326b568866b8a62050b5",
+                "operationId": "947c8f049c85244a74c21742fd684f02",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -662,6 +662,294 @@
                     }
                 }
             }
+        },
+        "/api/raffle/{id}/toggle": {
+            "put": {
+                "tags": [
+                    "Raffle"
+                ],
+                "summary": "Ativar/Desativar uma rifa",
+                "description": "Este endpoint ativa ou desativa o status 'isEnable' de uma rifa. O valor alterna entre 1 e 0.",
+                "operationId": "toggleIsEnable",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID da rifa",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Rifa atualizada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "O status de isEnable foi alterado com sucesso."
+                                        },
+                                        "raffle": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "isEnable": {
+                                                    "type": "boolean",
+                                                    "example": 1
+                                                },
+                                                "title": {
+                                                    "type": "string",
+                                                    "example": "Rifa Solidária"
+                                                },
+                                                "startDate": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2024-11-01 09:00:00"
+                                                },
+                                                "endDate": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2024-11-30 17:00:00"
+                                                },
+                                                "ticketPrice": {
+                                                    "type": "number",
+                                                    "format": "float",
+                                                    "example": "20.00"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Rifa não encontrada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Rifa não encontrada."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/ticket": {
+            "get": {
+                "tags": [
+                    "Tickets"
+                ],
+                "summary": "Listar todos os tickets",
+                "operationId": "6ccc18e670abb445387d0aa18cce5cac",
+                "responses": {
+                    "200": {
+                        "description": "Lista de tickets",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "app/OpenApi/Schemas/Ticket.php"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/tickets": {
+            "post": {
+                "tags": [
+                    "Tickets"
+                ],
+                "summary": "Criar um novo ticket",
+                "operationId": "9ed214015dd9b6ef0bc0a874682534fa",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "title",
+                                    "description",
+                                    "status"
+                                ],
+                                "properties": {
+                                    "title": {
+                                        "type": "string",
+                                        "example": "Erro no sistema"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Descrição do erro detalhada"
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "enum": [
+                                            "open",
+                                            "closed",
+                                            "pending"
+                                        ],
+                                        "example": "open"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Ticket criado com sucesso"
+                    },
+                    "422": {
+                        "description": "Erro de validação"
+                    }
+                }
+            }
+        },
+        "/api/tickets/{id}": {
+            "get": {
+                "tags": [
+                    "Tickets"
+                ],
+                "summary": "Exibir um ticket específico",
+                "operationId": "01edd4377d89acc9a9e54702f1361783",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do ticket",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Detalhes do ticket retornados com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "app/OpenApi/Schemas/Ticket.php"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Ticket não encontrado"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Tickets"
+                ],
+                "summary": "Atualizar um ticket existente",
+                "operationId": "db5be63998e90cdefec7b261b7223dc2",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do ticket",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "title": {
+                                        "type": "string",
+                                        "example": "Erro no sistema atualizado"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Descrição detalhada do erro atualizado"
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "enum": [
+                                            "open",
+                                            "closed",
+                                            "pending"
+                                        ],
+                                        "example": "closed"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Ticket atualizado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "app/OpenApi/Schemas/Ticket.php"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Ticket não encontrado"
+                    },
+                    "422": {
+                        "description": "Erro de validação"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Tickets"
+                ],
+                "summary": "Excluir um ticket",
+                "operationId": "82ece9e4437d180ba248c2e72418cedd",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do ticket",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Ticket excluído com sucesso"
+                    },
+                    "404": {
+                        "description": "Ticket não encontrado"
+                    }
+                }
+            }
         }
     },
     "tags": [
@@ -672,6 +960,10 @@
         {
             "name": "Raffle",
             "description": "Raffle"
+        },
+        {
+            "name": "Tickets",
+            "description": "Tickets"
         }
     ]
 }

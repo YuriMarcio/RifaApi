@@ -127,10 +127,10 @@ class RaffleCreation extends Controller
             $raffle = Raffle::create([
                 'title' => $validated['title'],
                 'raffleType' => $validated['raffleType'],
-                'startDate' => $validated['startDate'] ?? null, // Permite null
-                'endDate' => $validated['endDate'] ?? null, // Permite null
-                'description' => $validated['description'] ?? null, // Permite null
-                'terms' => $validated['terms'] ?? null, // Permite null
+                'startDate' => $validated['startDate'] ?? null, 
+                'endDate' => $validated['endDate'] ?? null, 
+                'description' => $validated['description'] ?? null, 
+                'terms' => $validated['terms'] ?? null, 
                 'ticketPrice' => $validated['ticketPrice'],
                 'maxTicketsPerUser' => $validated['maxTicketsPerUser'],
                 'maxParticipants' => $validated['maxParticipants'],
@@ -316,7 +316,7 @@ class RaffleCreation extends Controller
             ], 404);
         }
 
-        $teste= "teste";
+        $teste = "teste";
 
         // Preenche o modelo com os dados validados
         $raffle->fill($validatedData);
@@ -362,6 +362,8 @@ class RaffleCreation extends Controller
         // Encontra a rifa pelo ID
         $raffle = Raffle::find($id);
 
+
+
         // Verifica se a rifa foi encontrada
         if (!$raffle) {
             return response()->json([
@@ -375,6 +377,69 @@ class RaffleCreation extends Controller
         // Retorna uma resposta de sucesso
         return response()->json([
             'message' => 'Rifa excluída com sucesso.'
+        ], 200);
+    }
+
+
+
+    /**
+     * @OA\Put(
+     *     path="/api/raffle/{id}/toggle",
+     *     summary="Ativar/Desativar uma rifa",
+     *     description="Este endpoint ativa ou desativa o status 'isEnable' de uma rifa. O valor alterna entre 1 e 0.",
+     *     operationId="toggleIsEnable",
+     *     tags={"Raffle"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID da rifa",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Rifa atualizada com sucesso",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="O status de isEnable foi alterado com sucesso."),
+     *             @OA\Property(property="raffle", type="object",
+     *                 @OA\Property(property="id", type="integer", example=1),
+     *                 @OA\Property(property="isEnable", type="boolean", example=1),
+     *                 @OA\Property(property="title", type="string", example="Rifa Solidária"),
+     *                 @OA\Property(property="startDate", type="string", format="date-time", example="2024-11-01 09:00:00"),
+     *                 @OA\Property(property="endDate", type="string", format="date-time", example="2024-11-30 17:00:00"),
+     *                 @OA\Property(property="ticketPrice", type="number", format="float", example="20.00")
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Rifa não encontrada",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Rifa não encontrada.")
+     *         )
+     *     )
+     * )
+     */
+    public function toggleIsEnable($id)
+    {
+        // Encontra a rifa pelo ID
+        $raffle = Raffle::find($id);
+
+        // Verifica se a rifa foi encontrada
+        if (!$raffle) {
+            return response()->json(['message' => 'Rifa não encontrada.'], 404);
+        }
+
+        // Alterna o valor de isEnable (0 para 1, ou 1 para 0)
+        $raffle->isEnable = !$raffle->isEnable;
+
+        // Salva a rifa com a alteração
+        $raffle->save();
+
+        // Retorna a rifa atualizada com sucesso
+        return response()->json([
+            'message' => 'O status de isEnable foi alterado com sucesso.',
+            'raffle' => $raffle
         ], 200);
     }
 }

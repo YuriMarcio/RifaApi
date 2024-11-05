@@ -42,6 +42,11 @@ class User extends Authenticatable implements JWTSubject
         'password' => 'hashed',
     ];
 
+    public function tickets()
+    {
+        return $this->belongsToMany(Ticket::class, 'ticket_user');
+    }
+
     /**
      * Get the identifier that will be stored in the JWT.
      *

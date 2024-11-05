@@ -79,7 +79,7 @@ class AuthController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/api/auth/employer-login",
+     *     path="/api/auth/loginemployer",
      *     summary="Autentica um empregador",
      *     tags={"Auth"},
      *     @OA\RequestBody(
